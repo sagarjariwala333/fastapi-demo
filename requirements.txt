@@ -12,4 +12,4 @@ pyodbc
 graphene 
 graphene-sqlalchemy
 starlette
-strawberry
+strawberry-graphql[fastapi]
