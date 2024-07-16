@@ -16,9 +16,10 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from movie.models import movie
+from models import movie
+from models import employee
 # target_metadata = mymodel.Base.metadata
-target_metadata = movie.Base.metadata
+target_metadata = [movie.Base.metadata, employee.Base.metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
