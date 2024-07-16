@@ -5,6 +5,7 @@ from strawberry.fastapi import GraphQLRouter # type: ignore
 from schemas.graphql import schema
 from api.endpoints.movie import router as movie_router
 from api.endpoints.employee import router as employee_router
+from api.endpoints.task import router as task_router
 from core.config import settings
 
 init_db()
@@ -19,6 +20,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(movie_router, prefix=settings.API_V1_STR)
 app.include_router(employee_router, prefix=settings.API_EMP_STR)
+app.include_router(task_router, prefix=settings.API_TASK_STR)
 app.include_router(GraphQLRouter(schema), prefix="/graphql")
 
 @app.get("/")
