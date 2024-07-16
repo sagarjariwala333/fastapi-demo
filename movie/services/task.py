@@ -6,7 +6,7 @@ from typing import List
 
 
 def create_task(db: Session, task: TaskCreate):
-    db_employee = Task(name=task.name, employee_id=task.employee_id)
+    db_employee = Task(name=task.name)
     db.add(db_employee)
     db.commit()
     db.refresh(db_employee)

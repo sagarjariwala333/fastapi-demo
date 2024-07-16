@@ -22,7 +22,6 @@ class EmployeeType:
 class TaskType:
     id: int
     name: str
-    employee_id: int
 
 @strawberry.type
 class Query:
@@ -42,6 +41,6 @@ class Query:
     def get_tasks(self) -> List[TaskType]:
         db: Session = next(get_db())
         tasks = db.query(Task).all()
-        return [TaskType(id=task.id, name=task.name, employee_id=task.employee_id) for task in tasks]
+        return [TaskType(id=task.id, name=task.name) for task in tasks]
 
 schema = strawberry.Schema(query=Query)
