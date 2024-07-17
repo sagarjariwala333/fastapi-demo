@@ -9,5 +9,6 @@ class Settings:
     API_V1_STR: str = '/movie'
     API_EMP_STR: str = '/employee'
     API_TASK_STR: str = '/task'
+    API_EMPLOYEE_TASK_STR: str = '/employeetask'
 
 settings = Settings()

@@ -6,6 +6,7 @@ from schemas.graphql import schema
 from api.endpoints.movie import router as movie_router
 from api.endpoints.employee import router as employee_router
 from api.endpoints.task import router as task_router
+from api.endpoints.employee_task import router as employee_task
 from core.config import settings
 
 init_db()
@@ -21,6 +22,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(movie_router, prefix=settings.API_V1_STR)
 app.include_router(employee_router, prefix=settings.API_EMP_STR)
 app.include_router(task_router, prefix=settings.API_TASK_STR)
+app.include_router(employee_task, prefix=settings.API_EMPLOYEE_TASK_STR)
 app.include_router(GraphQLRouter(schema), prefix="/graphql")
 
 @app.get("/")

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String # type: ignore
 from sqlalchemy.ext.declarative import declarative_base # type: ignore
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
