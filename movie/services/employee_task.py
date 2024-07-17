@@ -16,4 +16,14 @@ def assign_task_to_employee(db: Session, employeeTask: EmployeeTaskCreate):
     return db_employee_task
 
 def get_all_tasks_with_employees(db: Session):
-    return db.query(Employee).all()
+    employee_task = db.query(EmployeeTask).all()
+    return employee_task
+
+def bulk_insert_employees_tasks(db: Session, tasks: List[int], employees: List[int]):
+    employee_task = [
+        EmployeeTask(employee_id=employee_id, task_id=task_id)
+        for employee_id in employees
+        for task_id in tasks
+    ]
+    db.bulk_save_objects(employee_task)
+    db.commit()

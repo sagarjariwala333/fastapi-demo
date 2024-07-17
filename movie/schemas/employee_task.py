@@ -36,3 +36,7 @@ class EmployeeTask(BaseModel):
 
 class TaskWithEmployees(TaskBase):
     employees: List[EmployeeTask]
+    
+class BulkInsertRequest(BaseModel):
+    employees: List[int]
+    tasks: List[int]

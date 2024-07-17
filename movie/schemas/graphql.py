@@ -5,6 +5,7 @@ from db.session import get_db
 from sqlalchemy.orm import Session
 from models.employee import Employee
 from models.task import Task
+from models.employee_task import EmployeeTask
 
 # Define your Strawberry type
 @strawberry.type
@@ -22,6 +23,12 @@ class EmployeeType:
 class TaskType:
     id: int
     name: str
+    
+@strawberry.type
+class EmployeeTaskType:
+    id: int
+    task_id: int
+    employee_id: int
 
 @strawberry.type
 class Query:
@@ -42,5 +49,11 @@ class Query:
         db: Session = next(get_db())
         tasks = db.query(Task).all()
         return [TaskType(id=task.id, name=task.name) for task in tasks]
+    
+    @strawberry.field
+    def get_employee_task(self) -> List[EmployeeTaskType]:
+        db: Session = next(get_db())
+        employee_tasks = db.query(EmployeeTask).all()
+        return [EmployeeTaskType(id=et.id, task_id=et.task_id, employee_id=et.employee_id) for et in employee_tasks]
 
 schema = strawberry.Schema(query=Query)
