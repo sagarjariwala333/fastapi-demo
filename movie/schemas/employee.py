@@ -9,3 +9,6 @@ class EmployeeResponse(BaseModel):
 
     class Config:
         orm_mode = True  # Allow compatibility with ORM models
+        
+class EmployeeDeleteRequest(BaseModel):
+    employee_id: int

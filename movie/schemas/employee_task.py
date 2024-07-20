@@ -40,3 +40,13 @@ class TaskWithEmployees(TaskBase):
 class BulkInsertRequest(BaseModel):
     employees: List[int]
     tasks: List[int]
+    
+class DeleteEmployeeRequest(BaseModel):
+    employee_id: int
+    
+class EmployeeTaskJoin(BaseModel):
+    id: int
+    employee_id: int
+    employee: str
+    task_id: int
+    task: str

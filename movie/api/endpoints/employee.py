@@ -1,9 +1,13 @@
 # app/api/endpoints/example.py
 from fastapi import APIRouter, Depends, HTTPException # type: ignore
 from sqlalchemy.orm import Session # type: ignore
-from schemas.employee import EmployeeCreate, EmployeeResponse
+from schemas.employee import EmployeeCreate, EmployeeDeleteRequest, EmployeeResponse
 from services.employee import ( # type: ignore
-    create_employee, get_employees, get_employee as get_db_employee
+    create_employee,
+    get_employees,
+    get_employee as get_db_employee,
+    delete_employee as delete_db_employee,
+    
 )
 from db.session import get_db
 
@@ -21,27 +25,9 @@ def get_all_employee(db: Session = Depends(get_db)):
 def get_employee(employee_id: int, db: Session = Depends(get_db)):
     return get_db_employee(db, employee_id=employee_id)
 
-# @router.get("/{example_id}", response_model=MovieResponse)
-# def read_example(example_id: int, db: Session = Depends(get_db)):
-#     db_example = get_movie(db, example_id)
-#     if db_example is None:
-#         raise HTTPException(status_code=404, detail="Example not found")
-#     return db_example
-
-# @router.get("/", response_model=list[MovieResponse])
-# def read_examples(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-#     return get_movies(db, skip=skip, limit=limit)
-
-# @router.put("/{example_id}", response_model=MovieResponse)
-# def update_example_endpoint(example_id: int, example: MovieCreate, db: Session = Depends(get_db)):
-#     updated_example = update_movie(db, example_id, example)
-#     if updated_example is None:
-#         raise HTTPException(status_code=404, detail="Example not found")
-#     return updated_example
-
-# @router.delete("/{example_id}", response_model=MovieResponse)
-# def delete_example_endpoint(example_id: int, db: Session = Depends(get_db)):
-#     deleted_example = delete_example(db, example_id)
-#     if deleted_example is None:
-#         raise HTTPException(status_code=404, detail="Example not found")
-#     return deleted_example
+@router.delete("/{employee_id}")
+def delete_employee(employee_id: int, db: Session = Depends(get_db)):
+    db_employee = get_db_employee(db=db, employee_id=employee_id)
+    if db_employee is None:
+        raise HTTPException(status_code=404, detail='Employee does not exist')
+    return delete_db_employee(employee_id=employee_id, db=db)

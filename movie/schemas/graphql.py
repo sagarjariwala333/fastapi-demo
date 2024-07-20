@@ -1,4 +1,5 @@
 from typing import List
+from services.employee_task import get_employees_with_tasks_join
 import strawberry
 from models.movie import Movie  # Ensure this import points to your Movie model
 from db.session import get_db
@@ -29,7 +30,14 @@ class EmployeeTaskType:
     id: int
     task_id: int
     employee_id: int
-
+    
+@strawberry.type
+class EmployeeTaskJoinType:
+    id: int
+    task_id: int
+    task: str
+    employee_id: int
+    employee: str
 @strawberry.type
 class Query:
     @strawberry.field
@@ -55,5 +63,11 @@ class Query:
         db: Session = next(get_db())
         employee_tasks = db.query(EmployeeTask).all()
         return [EmployeeTaskType(id=et.id, task_id=et.task_id, employee_id=et.employee_id) for et in employee_tasks]
+    
+    @strawberry.field
+    def get_employees_tasks_join(self) -> List[EmployeeTaskJoinType]:
+        db: Session = next(get_db())
+        employee_task = get_employees_with_tasks_join(db=db)
+        return [EmployeeTaskJoinType(id=et.id, task_id=et.task_id, employee_id=et.employee_id, task=et.task, employee=et.employee) for et in employee_task]
 
 schema = strawberry.Schema(query=Query)
