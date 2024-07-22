@@ -13,3 +13,4 @@ graphene
 graphene-sqlalchemy
 starlette
 strawberry-graphql[fastapi]
+requests

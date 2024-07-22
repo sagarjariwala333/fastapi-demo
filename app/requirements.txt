@@ -13,3 +13,4 @@ graphene
 graphene-sqlalchemy
 graphql-core
 strawberry-graphql[fastapi]
+requests

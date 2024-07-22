@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   app:
     build:
       context: ./app
@@ -11,21 +12,6 @@ services:
     ports:
       - "8000:8000"
 
-  app-dapr:
-    image: "daprio/daprd:edge"
-    command: [
-      "./daprd",
-      "--app-id", "app",
-      "--app-port", "9000",
-      "--placement-host-address", "placement:50006",
-      "--resources-path", "./components"
-    ]
-    volumes:
-      - "./components:/components"
-    depends_on:
-      - app
-    network_mode: "service:app"
-
   movie:
     build:
       context: ./movie
@@ -35,29 +21,3 @@ services:
       - ./movie/.env
     ports:
       - "8001:8001"
-
-  movie-dapr:
-    image: "daprio/daprd:edge"
-    command: [
-      "./daprd",
-      "--app-id", "movie",
-      "--app-port", "9001",
-      "--placement-host-address", "placement:50006",
-      "--resources-path", "./components"
-    ]
-    volumes:
-      - "./components:/components"
-    depends_on:
-      - movie
-    network_mode: "service:movie"
-
-  placement:
-    image: "daprio/dapr"
-    command: ["./placement", "--port", "50006"]
-    ports:
-      - "50006:50006"
-    networks:
-      - hello-dapr
-
-networks:
-  hello-dapr: null

@@ -1,4 +1,4 @@
-from fastapi import FastAPI # type: ignore
+from fastapi import FastAPI, requests # type: ignore
 from contextlib import asynccontextmanager
 from db.session import init_db
 from strawberry.fastapi import GraphQLRouter # type: ignore
@@ -21,6 +21,11 @@ async def lifespan(app: FastAPI):
 
 # Initialize FastAPI app
 app = FastAPI(lifespan=lifespan)
+
+@app.post("/sample-topic")
+async def subscribe(message: dict):
+    print(f"Received message: {message}")
+    return {"status": "Message received"}
 
 origins = [
     "http://localhost:5173",
