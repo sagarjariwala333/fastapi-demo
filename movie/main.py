@@ -1,4 +1,4 @@
-from fastapi import FastAPI, requests # type: ignore
+from fastapi import FastAPI # type: ignore
 from contextlib import asynccontextmanager
 from db.session import init_db
 from strawberry.fastapi import GraphQLRouter # type: ignore
@@ -9,6 +9,7 @@ from api.endpoints.task import router as task_router
 from api.endpoints.employee_task import router as employee_task
 from core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
+import requests
 
 
 init_db()
@@ -26,6 +27,17 @@ app = FastAPI(lifespan=lifespan)
 async def subscribe(message: dict):
     print(f"Received message: {message}")
     return {"status": "Message received"}
+
+@app.get("/invoke-app-service")
+async def invoke_app_service():
+    dapr_url = "http://localhost:3000/v1.0/invoke/daprapp/method/process-data"
+    data = { 'flag': 'true' }
+    try:
+        response = requests.get(dapr_url)
+        response.raise_for_status()
+        return {"status": "success", "response": response.json()}
+    except requests.exceptions.RequestException as e:
+        return {"status": "error", "message": str(e)}
 
 origins = [
     "http://localhost:5173",

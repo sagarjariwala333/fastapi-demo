@@ -26,6 +26,10 @@ app.include_router(GraphQLRouter(schema), prefix="/graphql")
 class Message(BaseModel):
     message: str
 
+@app.get("/process-data")
+async def process_data():
+    return {"message": "Data processed successfully", "data": 'data'}
+
 @app.post("/publish/")
 async def publish_message(message: Message):
     payload = {

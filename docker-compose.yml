@@ -1,7 +1,6 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
   app:
     build:
       context: ./app
@@ -11,6 +10,8 @@ services:
       - ./app/.env
     ports:
       - "8000:8000"
+    networks:
+      - fastapi-demo-network
 
   movie:
     build:
@@ -21,3 +22,15 @@ services:
       - ./movie/.env
     ports:
       - "8001:8001"
+    networks:
+      - fastapi-demo-network
+
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "--port", "50006"]
+    ports:
+      - "50006:50006"
+
+networks:
+  fastapi-demo-network:
+    driver: bridge
