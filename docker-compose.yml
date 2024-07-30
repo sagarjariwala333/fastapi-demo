@@ -25,11 +25,33 @@ services:
     networks:
       - fastapi-demo-network
 
-  placement:
-    image: "daprio/dapr"
-    command: ["./placement", "--port", "50006"]
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    depends_on:
+      - app
+      - movie
+    restart: always
     ports:
-      - "50006:50006"
+      - "3050:80"
+    networks:
+      - fastapi-demo-network
+
+  apisix:
+    image: apache/apisix:latest
+    volumes:
+      - ./apisix/config.yml:/usr/local/apisix/conf/config.yaml:ro
+      - ./apisix/apisix.yml:/usr/local/apisix/conf/apisix.yaml:ro
+    depends_on:
+      - nginx
+    ports:
+      - "9080:9080"
+    environment:
+      - GATEWAY_PORT=9080
+    networks:
+      - fastapi-demo-network
 
 networks:
   fastapi-demo-network:

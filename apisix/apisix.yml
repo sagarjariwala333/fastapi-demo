@@ -1,0 +1,14 @@
+upstreams:
+  - name: "example upstream"
+    id: 1
+    type: roundrobin
+    nodes:
+      "nginx:80": 1
+routes:
+  - name: "example-route"
+    uri: /
+    upstream_id: 1
+consumers:
+  - username: exampleuser
+#END
+
