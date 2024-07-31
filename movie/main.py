@@ -55,9 +55,9 @@ app.include_router(movie_router, prefix=settings.API_V1_STR)
 app.include_router(employee_router, prefix=settings.API_EMP_STR)
 app.include_router(task_router, prefix=settings.API_TASK_STR)
 app.include_router(employee_task, prefix=settings.API_EMPLOYEE_TASK_STR)
-app.include_router(GraphQLRouter(schema), prefix="/graphql")
+app.include_router(GraphQLRouter(schema), prefix="/movie/graphql")
 
-@app.get("/")
+@app.get("/movie")
 def read_root():
     return {"Hello": "World"}
 
