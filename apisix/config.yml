@@ -2,3 +2,7 @@ deployment:
   role: data_plane
   role_data_plane:
     config_provider: yaml
+
+plugin_attr:
+  file-logger:
+    path: "/usr/local/apisix/logs/access.log"

@@ -8,6 +8,18 @@ routes:
   - name: "example-route"
     uri: /*
     upstream_id: 1
+    plugins:
+      file-logger:
+        path: "/usr/local/apisix/logs/access.log"
+        include_req_body: true # Include request body in the logs
+        include_resp_body: true # Include response body in the logs
+        log_format: # Define the format of the logs
+          request_uri: "$request_uri"
+          request_headers: "$request_headers"
+          request_body: "$request_body"
+          response_headers: "$response_headers"
+          response_body: "$response_body"
+          status: "$status"
 consumers:
   - username: exampleuser
 #END
