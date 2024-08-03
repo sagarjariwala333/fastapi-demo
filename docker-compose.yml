@@ -12,6 +12,12 @@ services:
       - "8000:8000"
     networks:
       - fastapi-demo-network
+    labels:
+      - "dapr.io/enabled=true"
+      - "dapr.io/app-id=app"
+      - "dapr.io/app-port=8000"
+      - "dapr.io/sidecar-http-port=3500"
+      - "dapr.io/sidecar-grpc-port=50001"
 
   movie:
     build:
@@ -24,6 +30,12 @@ services:
       - "8001:8001"
     networks:
       - fastapi-demo-network
+    labels:
+      - "dapr.io/enabled=true"
+      - "dapr.io/app-id=movie"
+      - "dapr.io/app-port=8001"
+      - "dapr.io/sidecar-http-port=3501"
+      - "dapr.io/sidecar-grpc-port=50002"
 
   nginx:
     build:
@@ -39,6 +51,62 @@ services:
     networks:
       - fastapi-demo-network
 
+  app-dapr:
+    image: "daprio/daprd:edge"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "app",
+        "-app-port",
+        "8000",
+        "-placement-host-address",
+        "placement:50006",
+        "-dapr-grpc-port",
+        "50001",
+        "-dapr-http-port",
+        "3500",
+        "-components-path",
+        "/components",
+      ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      - app
+    ports:
+      - "3500:3500" # Dapr HTTP port
+      - "50001:50001" # Dapr gRPC port
+    networks:
+      - fastapi-demo-network
+
+  movie-dapr:
+    image: "daprio/daprd:edge"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "movie",
+        "-app-port",
+        "8001",
+        "-placement-host-address",
+        "placement:50006",
+        "-dapr-grpc-port",
+        "50002",
+        "-dapr-http-port",
+        "3501",
+        "-components-path",
+        "/components",
+      ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      - movie
+    ports:
+      - "3501:3501" # Dapr HTTP port
+      - "50002:50002" # Dapr gRPC port
+    networks:
+      - fastapi-demo-network
+
   apisix:
     image: apache/apisix:latest
     volumes:
@@ -47,7 +115,6 @@ services:
       - ./logs:/usr/local/apisix/logs
     depends_on:
       - nginx
-      - elasticsearch
     ports:
       - "9080:9080"
     environment:
@@ -55,29 +122,18 @@ services:
     networks:
       - fastapi-demo-network
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - ELASTIC_PASSWORD=changeme
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "-port", "50006"]
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "50006:50006"
     networks:
       - fastapi-demo-network
 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.10.1
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=changeme
-    depends_on:
-      - elasticsearch
+  redis:
+    image: "redis:alpine"
     ports:
-      - "5601:5601"
+      - "6380:6379"
     networks:
       - fastapi-demo-network
 

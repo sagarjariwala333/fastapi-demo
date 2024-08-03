@@ -11,6 +11,8 @@ dapr
 pyodbc
 graphene 
 graphene-sqlalchemy
-graphql-core
+starlette
 strawberry-graphql[fastapi]
 requests
+python-dotenv
+

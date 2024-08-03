@@ -45,6 +45,52 @@ async def publish_message(message: Message):
 def read_root():
     return {"Hello": "World"}
 
+@app.get("/app/dapr")
+def invoke_movie_service():
+    dapr_port = 3500  # Dapr's HTTP port
+    movie_service_url = f"http://movie-dapr:{3501}/v1.0/publish/pubsub/my-topic"
+    payload = {"message": "Hello, World!"}
+    response = requests.post(movie_service_url, json=payload)
+    
+    # Log the status code and content
+    print("Response Status Code:", response.status_code)
+    print("Response Content:", response.text)
+
+    try:
+        json_response = response.json()
+    except requests.exceptions.JSONDecodeError:
+        return {"error": "Invalid JSON response from movie service", "response_text": response.text}
+    
+    return json_response
+
+@app.get("/app/dapr/set-state")
+def set_state():
+    state = [{"key": 'key', "value": 'value'}]
+    DAPR_HTTP_PORT = 3501  # Dapr's HTTP port
+    STATE_STORE_NAME = "statestore"
+    STATE_URL = f"http://movie-dapr:{DAPR_HTTP_PORT}/v1.0/state/{STATE_STORE_NAME}"
+    response = requests.post(STATE_URL, json=state)
+    if response.status_code == 204:
+        return {"status": "State set successfully"}
+    else:
+        return {"error": "Failed to set state", "status_code": response.status_code, "response_text": response.text}
+
+@app.get("/app/dapr/get_state")
+def get_state():
+    state = [{"key": 'key', "value": 'value'}]
+    DAPR_HTTP_PORT = 3501  # Dapr's HTTP port
+    STATE_STORE_NAME = "statestore"
+    STATE_URL = f"http://movie-dapr:{DAPR_HTTP_PORT}/v1.0/state/{STATE_STORE_NAME}"
+    response = requests.get(f"{STATE_URL}/{'key'}")
+    print(response.content)
+    
+    if response.status_code == 200:
+        return {"key": 'key', "value": response.json()}
+    elif response.status_code == 404:
+        return {"error": "State not found", "status_code": response.status_code}
+    else:
+        return {"error": "Failed to get state", "status_code": response.status_code, "response_text": response.text}
+
 if __name__ == "__main__":
     import uvicorn # type: ignore
     uvicorn.run(app, host="0.0.0.0", port=8000)
