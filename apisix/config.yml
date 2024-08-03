@@ -6,3 +6,14 @@ deployment:
 plugin_attr:
   file-logger:
     path: "/usr/local/apisix/logs/access.log"
+  elasticsearch-logger:
+    endpoint_addrs:
+      - "http://elasticsearch:9200"
+    index: "apisix_logs"
+    log_format:
+      request_uri: "$request_uri"
+      request_headers: "$request_headers"
+      request_body: "$request_body"
+      response_headers: "$response_headers"
+      response_body: "$response_body"
+      status: "$status"
