@@ -18,3 +18,4 @@ python-dotenv
 passlib 
 bcrypt
 jwt
+pydantic-settings
