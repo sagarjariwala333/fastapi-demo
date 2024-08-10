@@ -15,4 +15,6 @@ starlette
 strawberry-graphql[fastapi]
 requests
 python-dotenv
-
+passlib 
+bcrypt
+jwt

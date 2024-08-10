@@ -1,11 +1,12 @@
 upstreams:
-  - name: "example upstream"
+  - name: "app upstream"
     id: 1
     type: roundrobin
     nodes:
       "nginx:80": 1
+
 routes:
-  - name: "example-route"
+  - name: "app-route"
     uri: /*
     upstream_id: 1
     plugins:
@@ -20,7 +21,5 @@ routes:
           response_headers: "$response_headers"
           response_body: "$response_body"
           status: "$status"
-consumers:
-  - username: exampleuser
 #END
 

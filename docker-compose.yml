@@ -11,7 +11,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - fastapi-demo-network
+      - apisix
     labels:
       - "dapr.io/enabled=true"
       - "dapr.io/app-id=app"
@@ -29,7 +29,7 @@ services:
     ports:
       - "8001:8001"
     networks:
-      - fastapi-demo-network
+      - apisix
     labels:
       - "dapr.io/enabled=true"
       - "dapr.io/app-id=movie"
@@ -49,7 +49,7 @@ services:
     ports:
       - "3050:80"
     networks:
-      - fastapi-demo-network
+      - apisix
 
   app-dapr:
     image: "daprio/daprd:edge"
@@ -77,7 +77,7 @@ services:
       - "3500:3500" # Dapr HTTP port
       - "50001:50001" # Dapr gRPC port
     networks:
-      - fastapi-demo-network
+      - apisix
 
   movie-dapr:
     image: "daprio/daprd:edge"
@@ -105,7 +105,7 @@ services:
       - "3501:3501" # Dapr HTTP port
       - "50002:50002" # Dapr gRPC port
     networks:
-      - fastapi-demo-network
+      - apisix
 
   apisix:
     image: apache/apisix:latest
@@ -120,7 +120,7 @@ services:
     environment:
       - GATEWAY_PORT=9080
     networks:
-      - fastapi-demo-network
+      - apisix
 
   placement:
     image: "daprio/dapr"
@@ -128,15 +128,15 @@ services:
     ports:
       - "50006:50006"
     networks:
-      - fastapi-demo-network
+      - apisix
 
   redis:
     image: "redis:alpine"
     ports:
       - "6380:6379"
     networks:
-      - fastapi-demo-network
+      - apisix
 
 networks:
-  fastapi-demo-network:
+  apisix:
     driver: bridge
