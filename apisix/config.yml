@@ -1,28 +1,25 @@
+apisix:
+  enable_ipv6: false
+
+  enable_control: true
+  control:
+    ip: "0.0.0.0"
+    port: 9092
+
 deployment:
   role: data_plane
   role_data_plane:
     config_provider: yaml
 
 plugins:
-  - elasticsearch
   - jwt-auth
+  - request-logger
 
 plugin_attr:
-  elasticsearch:
-    host: "http://elasticsearch:9200" # ElasticSearch server address
-    log_format:
-      host: "$host"
-      client_ip: "$remote_addr"
-      time: "$time_local"
-      request: "$request"
-      status: "$status"
-      body_bytes_sent: "$body_bytes_sent"
-      http_referer: "$http_referer"
-      http_user_agent: "$http_user_agent"
-
   file-logger:
     path: "/usr/local/apisix/logs/access.log"
 
   jwt-auth:
     key: "Secret"
     algorithm: "HS256"
+

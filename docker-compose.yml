@@ -123,7 +123,7 @@ services:
       - apisix
 
   placement:
-    image: "daprio/dapr"
+    image: "daprio/dapr:edge"
     command: ["./placement", "-port", "50006"]
     ports:
       - "50006:50006"
