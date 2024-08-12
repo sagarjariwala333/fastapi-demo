@@ -3,11 +3,17 @@ upstreams:
     id: 1
     type: roundrobin
     nodes:
-      "nginx:80": 1
+      "app:8000": 1
+  - name: "movie upstream"
+    id: 2
+    type: roundrobin
+    nodes:
+      "movie:8001": 1
+  
 
 routes:
   - name: "app-route"
-    uri: /*
+    uri: /app*
     upstream_id: 1
     plugins:
       file-logger:
@@ -21,5 +27,19 @@ routes:
           response_headers: "$response_headers"
           response_body: "$response_body"
           status: "$status"
+  - name: "movie-route"
+    uri: /movie*
+    upstream_id: 2
+    plugins:
+      file-logger:
+        path: "/usr/local/apisix/logs/access.log"
+        include_req_body: true # Include request body in the logs
+        include_resp_body: true # Include response body in the logs
+        log_format: # Define the format of the logs
+          request_uri: "$request_uri"
+          request_headers: "$request_headers"
+          request_body: "$request_body"
+          response_headers: "$response_headers"
+          response_body: "$response_body"
+          status: "$status"
 #END
-

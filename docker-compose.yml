@@ -113,6 +113,7 @@ services:
       - ./apisix/config.yml:/usr/local/apisix/conf/config.yaml:ro
       - ./apisix/apisix.yml:/usr/local/apisix/conf/apisix.yaml:ro
       - ./logs:/usr/local/apisix/logs
+      - ./apisix/custom-plugins:/opt/apisix/plugins:ro
     depends_on:
       - nginx
     ports:

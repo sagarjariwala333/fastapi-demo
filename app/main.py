@@ -21,14 +21,14 @@ async def lifespan(app: FastAPI):
 
 # Initialize FastAPI app
 app = FastAPI(lifespan=lifespan)
-app.include_router(GraphQLRouter(schema), prefix="/graphql")
-app.include_router(auth_router, prefix='/auth')
+app.include_router(GraphQLRouter(schema), prefix="/app/graphql")
+app.include_router(auth_router, prefix='/app/auth')
 # app.add_route("/graphql", GraphQLApp(schema=schema))
 
 class Message(BaseModel):
     message: str
 
-@app.get("/")
+@app.get("/app")
 def read_root():
     return {"Hello": "World"}
 
