@@ -1,3 +1,6 @@
+apisix:
+  extra_lua_path: "/opt/apisix/plugins/*.lua"
+
 deployment:
   role: data_plane
   role_data_plane:
@@ -5,6 +8,10 @@ deployment:
 
 plugins:
   - jwt-auth
+  - file-logger
+  - request-logger
+  - add-header
+  - forward-auth
 
 plugin_attr:
   file-logger:
@@ -13,4 +20,3 @@ plugin_attr:
   jwt-auth:
     key: "Secret"
     algorithm: "HS256"
-

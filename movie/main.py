@@ -1,4 +1,4 @@
-from fastapi import FastAPI # type: ignore
+from fastapi import FastAPI, Request # type: ignore
 from contextlib import asynccontextmanager
 from db.session import init_db
 from strawberry.fastapi import GraphQLRouter # type: ignore
@@ -58,8 +58,11 @@ app.include_router(employee_task, prefix=settings.API_EMPLOYEE_TASK_STR)
 app.include_router(GraphQLRouter(schema), prefix="/movie/graphql")
 
 @app.get("/movie")
-def read_root():
-    return {"Hello": "World"}
+def read_root(request: Request):
+    print(request.state)
+    # print(request.session)
+    print(request.state)
+    return {"Hello": "World", "headers": request.headers, "state": request.state}
 
 if __name__ == "__main__":
     import uvicorn # type: ignore

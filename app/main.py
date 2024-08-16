@@ -1,4 +1,4 @@
-from fastapi import FastAPI # type: ignore
+from fastapi import FastAPI, Request # type: ignore
 from contextlib import asynccontextmanager
 import requests
 
@@ -29,8 +29,9 @@ class Message(BaseModel):
     message: str
 
 @app.get("/app")
-def read_root():
-    return {"Hello": "World"}
+def read_root(request: Request):
+    print(request.headers)
+    return {"Hello": "World", "headers": request.headers}
 
 if __name__ == "__main__":
     import uvicorn # type: ignore

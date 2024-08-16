@@ -9,7 +9,6 @@ upstreams:
     type: roundrobin
     nodes:
       "movie:8001": 1
-  
 
 routes:
   - name: "app-route"
@@ -31,6 +30,12 @@ routes:
     uri: /movie*
     upstream_id: 2
     plugins:
+      forward-auth:
+        uri: http://app:8000/app/auth/validate
+        request_headers:
+          - Authorization
+        upstream_headers:
+          - X-User-Role
       file-logger:
         path: "/usr/local/apisix/logs/access.log"
         include_req_body: true # Include request body in the logs
