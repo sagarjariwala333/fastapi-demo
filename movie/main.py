@@ -64,6 +64,10 @@ def read_root(request: Request):
     print(request.state)
     return {"Hello": "World", "headers": request.headers, "state": request.state}
 
+@app.get("/movie/health")
+def health_check():
+    return {"status": "up"}
+
 if __name__ == "__main__":
     import uvicorn # type: ignore
     uvicorn.run(app, host="0.0.0.0", port=9000)

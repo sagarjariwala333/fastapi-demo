@@ -33,6 +33,10 @@ def read_root(request: Request):
     print(request.headers)
     return {"Hello": "World", "headers": request.headers}
 
+@app.get("/app/health")
+def health_check():
+    return {"status": "up"}
+
 if __name__ == "__main__":
     import uvicorn # type: ignore
     uvicorn.run(app, host="0.0.0.0", port=8000)
